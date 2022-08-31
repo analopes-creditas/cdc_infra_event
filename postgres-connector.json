@@ -1,0 +1,13 @@
+{
+    "name": "postgres-connector",
+    "config": {
+      "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+      "database.hostname": "postgres",
+      "database.port": "5432",
+      "database.user": "start_data_engineer",
+      "database.password": "pgpwd",
+      "database.dbname": "datahub",
+      "database.server.name": "dbserver",
+      "table.whitelist": "public.data_product"
+    }
+}

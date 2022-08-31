@@ -1,0 +1,85 @@
+version: '3.9'
+
+services:
+
+  # docker run -it --rm --name zookeeper -p 2181:2181 -p 2888:2888 -p 3888:3888 quay.io/debezium/zookeeper:1.9
+  zookeeper:
+    container_name: zookeeper
+    image: quay.io/debezium/zookeeper:1.9
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    expose:
+      - 2181
+    networks:
+      - default
+
+  # docker run -it --rm --name kafka -p 9092:9092 --link zookeeper:zookeeper quay.io/debezium/kafka:1.9
+  kafka:
+    container_name: kafka
+    image: quay.io/debezium/kafka:1.9
+    ports:
+      - 9092:9092
+      - 29092:29092
+    expose:
+      - 9092
+    environment:
+      ZOOKEEPER_CONNECT: zookeeper:2181
+      BROKER_ID: 1
+      # KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      # KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      # KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      # KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - default
+
+  # docker run -it --rm --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=debezium -e MYSQL_USER=mysqluser -e MYSQL_PASSWORD=mysqlpw quay.io/debezium/example-mysql:1.9
+  mysql:
+    container_name: mysql
+    image: quay.io/debezium/example-mysql:1.9
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: debezium
+      MYSQL_USER: mysqluser
+      MYSQL_PASSWORD: mysqlpw
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - default
+
+  # docker run -it --rm --name connect -p 8083:8083 -e GROUP_ID=1 -e CONFIG_STORAGE_TOPIC=my_connect_configs -e OFFSET_STORAGE_TOPIC=my_connect_offsets -e STATUS_STORAGE_TOPIC=my_connect_statuses --link kafka:kafka --link mysql:mysql quay.io/debezium/connect:1.9
+  connect:
+    container_name: connect
+    image: quay.io/debezium/connect:1.9
+    ports:
+      - 8083:8083
+    expose:
+      - 8083
+    environment:
+      GROUP_ID: 1
+      BOOTSTRAP_SERVERS: kafka:9092
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: my_connect_statuses
+      REST_HOST_NAME: 0.0.0.0
+    depends_on:
+      - zookeeper
+      - kafka
+      - mysql
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
