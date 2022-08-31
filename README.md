@@ -2,6 +2,8 @@
 
 Ambiente local para CDC do database PostgreSql usando Debezium (Kafka Connect) e transformando alterações do database em evento e publicando no Kafka.
 
+![infra](./Streaming_de_dados_PostgreSQL-Debezium-Kafka.jpg)
+
 ## Debezium-Kafka Connect (executados fora do container)
 
 - Validar funcionamento
