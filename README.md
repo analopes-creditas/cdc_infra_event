@@ -1,5 +1,7 @@
 # Infra-event
 
+Ambiente local para CDC do database PostgreSql usando Debezium (Kafka Connect) e transformando alterações do database em evento e publicando no Kafka.
+
 ## Debezium-Kafka Connect (executados fora do container)
 
 - Validar funcionamento
