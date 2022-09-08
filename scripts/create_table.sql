@@ -4,7 +4,7 @@ CREATE TABLE public.data_product_entity (
 	id varchar(36) NOT NULL GENERATED ALWAYS AS (((json ->> 'id'::text))) STORED,
 	fullyqualifiedname varchar(256) NOT NULL GENERATED ALWAYS AS (((json ->> 'fullyQualifiedName'::text))) STORED,
 	json jsonb NOT NULL,
-	updatedat int8 NOT NULL GENERATED ALWAYS AS ((json ->> 'updatedAt'::text)::integer) STORED,
+	updatedat timestamp NOT NULL GENERATED ALWAYS AS ((json ->> 'updatedAt'::text)::timestamp) STORED,
 	updatedby varchar(256) NOT NULL GENERATED ALWAYS AS (((json ->> 'updatedBy'::text))) STORED,
 	deleted bool NULL GENERATED ALWAYS AS ((json ->> 'deleted'::text)::boolean) STORED,
 	CONSTRAINT data_product_entity_fullyqualifiedname_key UNIQUE (fullyqualifiedname),
