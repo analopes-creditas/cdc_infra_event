@@ -38,13 +38,13 @@ services:
     expose:
       - 5432
     healthcheck:
-      test: ["CMD", "pg_isready -U start_data_engineer -d datahub"]
+      test: ["CMD", "pg_isready -U data_engineer -d datahub"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
     environment:
-      POSTGRES_USER: start_data_engineer
+      POSTGRES_USER: data_engineer
       POSTGRES_PASSWORD: pgpwd
       POSTGRES_DB: datahub
     volumes:
