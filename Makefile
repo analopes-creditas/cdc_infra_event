@@ -1,11 +1,11 @@
-.PHONY: connector-state
-connector-state:
+.PHONY: state-conn
+state-conn:
 	curl -H "Accept:application/json" localhost:8083/
 
-.PHONY: connector-list
-connector-list:
+.PHONY: list-conn
+list-conn:
 	curl -H "Accept:application/json" localhost:8083/connectors
 
-.PHONY: connector-create
-connector-create:
+.PHONY: create-conn
+create-conn:
 	curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d $(JSON)
