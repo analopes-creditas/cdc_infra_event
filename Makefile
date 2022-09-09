@@ -1,10 +1,14 @@
-.PHONY: dc-up
-dc-up:
+.PHONY: up
+up:
 	docker compose up -d
 
-.PHONY: dc-down
-dc-down:
+.PHONY: down
+down:
 	docker compose down
+
+.PHONY: clean
+clean:
+	docker system prune
 
 .PHONY: state-conn
 state-conn:
